@@ -35,17 +35,17 @@ export class UsersController {
     return new UserEntity(this.usersService.findOne(id));
   }
 
-  @Put(':userId')
+  @Put(':id')
   async update(
-    @Param('userId', ParseUUIDPipe) id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
     return new UserEntity(this.usersService.update(id, updateUserDto));
   }
 
-  @Delete(':userId')
+  @Delete(':id')
   @HttpCode(204)
-  async remove(@Param('userId', ParseUUIDPipe) id: string) {
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.remove(id);
   }
 }
