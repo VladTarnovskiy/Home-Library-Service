@@ -5,6 +5,7 @@ import { AlbumEntity } from './entities/album.entity';
 import { DataBaseService } from 'src/DB/db.service';
 import { NotFoundException } from '@nestjs/common/exceptions';
 import { v4 as uuidv4 } from 'uuid';
+import { TrackEntity } from 'src/tracks/entities/track.entity';
 
 @Injectable()
 export class AlbumsService {
@@ -47,6 +48,19 @@ export class AlbumsService {
       this.db.albums = this.db.albums.filter(
         (album: AlbumEntity) => album.id !== id,
       );
+      const track = this.db.tracks.filter(
+        (track: TrackEntity) => track.albumId === id,
+      )[0];
+      if (track) {
+        track.albumId = null;
+      }
+
+      const albumInFav = this.db.favorites.albums.includes(id);
+      if (albumInFav) {
+        this.db.favorites.albums = this.db.favorites.albums.filter(
+          (albumId) => albumId !== id,
+        );
+      }
     }
   }
 }

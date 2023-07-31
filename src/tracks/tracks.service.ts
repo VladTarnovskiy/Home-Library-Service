@@ -48,6 +48,13 @@ export class TracksService {
       this.db.tracks = this.db.tracks.filter(
         (track: TrackEntity) => track.id !== id,
       );
+
+      const trackInFav = this.db.favorites.tracks.includes(id);
+      if (trackInFav) {
+        this.db.favorites.tracks = this.db.favorites.tracks.filter(
+          (trackId) => trackId !== id,
+        );
+      }
     }
   }
 }
