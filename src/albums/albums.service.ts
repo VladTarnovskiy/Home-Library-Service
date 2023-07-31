@@ -2,28 +2,51 @@ import { Injectable } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { AlbumEntity } from './entities/album.entity';
-import { AlbumsStorage } from './storage/albums.storage';
+import { DataBaseService } from 'src/DB/db.service';
+import { NotFoundException } from '@nestjs/common/exceptions';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class AlbumsService {
-  constructor(private storage: AlbumsStorage) {}
-  create(createUserDto: CreateAlbumDto): AlbumEntity {
-    return this.storage.create(createUserDto);
+  constructor(private db: DataBaseService) {}
+  create(createAlbumDto: CreateAlbumDto): AlbumEntity {
+    const album = {
+      ...createAlbumDto,
+      id: uuidv4(),
+    };
+
+    this.db.albums.push(album);
+    return album;
   }
 
   findAll(): AlbumEntity[] {
-    return this.storage.findAll();
+    return this.db.albums;
   }
 
   findOne(id: string): AlbumEntity {
-    return this.storage.findOne(id);
+    const album = this.db.albums.filter(
+      (album: AlbumEntity) => album.id === id,
+    )[0];
+    if (album) {
+      return album;
+    }
+    throw new NotFoundException();
   }
 
-  update(id: string, updateUserDto: UpdateAlbumDto) {
-    return this.storage.update(id, updateUserDto);
+  update(id: string, updateAlbumDto: UpdateAlbumDto) {
+    const album = this.findOne(id);
+    album.name = updateAlbumDto.name;
+    album.year = updateAlbumDto.year;
+    album.artistId = updateAlbumDto.artistId;
+    return album;
   }
 
   remove(id: string) {
-    return this.storage.remove(id);
+    const album = this.findOne(id);
+    if (album) {
+      this.db.albums = this.db.albums.filter(
+        (album: AlbumEntity) => album.id !== id,
+      );
+    }
   }
 }

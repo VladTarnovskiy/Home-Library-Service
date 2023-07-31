@@ -1,30 +1,52 @@
 import { Injectable } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { ArtistsStorage } from './storage/artists.storage';
 import { ArtistEntity } from './entities/artist.entity';
+import { DataBaseService } from 'src/DB/db.service';
+import { NotFoundException } from '@nestjs/common/exceptions';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ArtistsService {
-  constructor(private storage: ArtistsStorage) {}
+  constructor(private db: DataBaseService) {}
 
-  create(createUserDto: CreateArtistDto): ArtistEntity {
-    return this.storage.create(createUserDto);
+  create(createArtistDto: CreateArtistDto): ArtistEntity {
+    const artist = {
+      ...createArtistDto,
+      id: uuidv4(),
+    };
+
+    this.db.artists.push(artist);
+    return artist;
   }
 
   findAll(): ArtistEntity[] {
-    return this.storage.findAll();
+    return this.db.artists;
   }
 
   findOne(id: string): ArtistEntity {
-    return this.storage.findOne(id);
+    const artist = this.db.artists.filter(
+      (artist: ArtistEntity) => artist.id === id,
+    )[0];
+    if (artist) {
+      return artist;
+    }
+    throw new NotFoundException();
   }
 
-  update(id: string, updateUserDto: UpdateArtistDto) {
-    return this.storage.update(id, updateUserDto);
+  update(id: string, updateArtistdDto: UpdateArtistDto) {
+    const artist = this.findOne(id);
+    artist.name = updateArtistdDto.name;
+    artist.grammy = updateArtistdDto.grammy;
+    return artist;
   }
 
   remove(id: string) {
-    return this.storage.remove(id);
+    const artist = this.findOne(id);
+    if (artist) {
+      this.db.artists = this.db.artists.filter(
+        (artist: ArtistEntity) => artist.id !== id,
+      );
+    }
   }
 }
