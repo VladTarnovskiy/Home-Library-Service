@@ -19,7 +19,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  // @HttpCode(201)
+  @HttpCode(201)
   async create(@Body() createUserDto: CreateUserDto) {
     return new UserEntity(this.usersService.create(createUserDto));
   }
@@ -32,6 +32,7 @@ export class UsersController {
 
   @Get(':id')
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
+    console.log(id);
     return new UserEntity(this.usersService.findOne(id));
   }
 
@@ -46,6 +47,7 @@ export class UsersController {
   @Delete(':id')
   @HttpCode(204)
   async remove(@Param('id', ParseUUIDPipe) id: string) {
+    console.log('herfe');
     return this.usersService.remove(id);
   }
 }

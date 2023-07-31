@@ -11,9 +11,6 @@ import { UserEntity } from '../entities/user.entity';
 @Injectable()
 export class UserStorage {
   private users: UserEntity[] = [];
-  //   constructor(users: UserEntity[]) {
-  //     this.users = users;
-  //   }
 
   create(createUserDto: CreateUserDto): UserEntity {
     const user = {
