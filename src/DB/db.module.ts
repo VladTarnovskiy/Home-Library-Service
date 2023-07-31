@@ -6,4 +6,4 @@ import { DataBaseService } from './db.service';
   providers: [DataBaseService],
   exports: [DataBaseService],
 })
-export class Database {}
+export class DatabaseModule {}

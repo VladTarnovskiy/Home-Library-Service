@@ -10,7 +10,7 @@ import { TrackEntity } from 'src/tracks/entities/track.entity';
 import { FavoritesResponse } from './entities/favorite.entity';
 
 @Injectable()
-export class FavsService {
+export class FavoritesService {
   constructor(private db: DataBaseService) {}
 
   addArtist(id: string) {
