@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { IUser } from '../interfaces/user.intesrface';
 import { CreateUserDto } from '../dto/create-user.dto';
 import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common/exceptions';
 import { v4 as uuidv4 } from 'uuid';
-import { UpdatePasswordDto } from '../dto/update-user.dto';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { UserEntity } from '../entities/user.entity';
 
 @Injectable()
 export class UserStorage {
-  private users: IUser[];
-  constructor(users: IUser[]) {
-    this.users = users;
-  }
+  private users: UserEntity[] = [];
+  //   constructor(users: UserEntity[]) {
+  //     this.users = users;
+  //   }
 
-  create(createUserDto: CreateUserDto): IUser {
+  create(createUserDto: CreateUserDto): UserEntity {
     const user = {
       ...createUserDto,
       version: 1,
@@ -28,19 +28,19 @@ export class UserStorage {
     return user;
   }
 
-  findAll(): IUser[] {
+  findAll(): UserEntity[] {
     return this.users;
   }
 
-  findOne(id: string): IUser {
-    const user = this.users.filter((user: IUser) => user.id === id)[0];
+  findOne(id: string): UserEntity {
+    const user = this.users.filter((user: UserEntity) => user.id === id)[0];
     if (user) {
       return user;
     }
     throw new NotFoundException();
   }
 
-  update(id: string, updatePasswordDto: UpdatePasswordDto) {
+  update(id: string, updatePasswordDto: UpdateUserDto) {
     const user = this.findOne(id);
     if (user.password === updatePasswordDto.oldPassword) {
       user.password = updatePasswordDto.newPassword;
@@ -54,7 +54,7 @@ export class UserStorage {
   remove(id: string) {
     const user = this.findOne(id);
     if (user) {
-      this.users = this.users.filter((user: IUser) => user.id !== id);
+      this.users = this.users.filter((user: UserEntity) => user.id !== id);
     }
   }
 }
