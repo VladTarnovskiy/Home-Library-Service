@@ -10,7 +10,7 @@ import {
 import { FavoritesResponse } from './entities/favorite.entity';
 import { FavoritesService } from './favorites.service';
 
-@Controller('favorites')
+@Controller('favs')
 export class FavoritesController {
   constructor(private readonly favsService: FavoritesService) {}
 
