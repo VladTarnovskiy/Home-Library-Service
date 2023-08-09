@@ -1,6 +1,8 @@
 version: '3'
 services:
-  node:
+  api:
+    container_name: 'nodejs2023q2-api'
+    image: vladtarnovskiy/api
     build: .
     ports:
       - ${PORT}:${PORT}
@@ -14,6 +16,8 @@ services:
     env_file:
       - .env
   postgres:
+    container_name: 'nodejs2023q2-postgres-db'
+    image: vladtarnovskiy/postgres-db
     build: ./database/
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
