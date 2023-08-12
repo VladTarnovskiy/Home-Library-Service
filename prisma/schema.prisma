@@ -11,5 +11,32 @@ datasource db {
 }
 
 model User {
-  
+  id        String   @id @default(uuid())
+  login     String   @unique
+  password  String
+  version   Int
+  createdAt DateTime
+  updatedAt DateTime
 }
+
+model Track {
+  id       String  @id @default(uuid())
+  name     String
+  artistId String? @unique
+  albumId  String? @unique
+  duration Int
+}
+
+model Artist {
+  id     String   @id @default(uuid())
+  name   String
+  grammy Boolean
+}
+
+model Album {
+  id       String  @id @default(uuid())
+  name     String
+  year     Int
+  artistId String?
+}
+
