@@ -14,29 +14,36 @@ model User {
   id        String   @id @default(uuid())
   login     String   @unique
   password  String
-  version   Int
-  createdAt DateTime
-  updatedAt DateTime
-}
-
-model Track {
-  id       String  @id @default(uuid())
-  name     String
-  artistId String? @unique
-  albumId  String? @unique
-  duration Int
+  version   Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Artist {
-  id     String   @id @default(uuid())
-  name   String
-  grammy Boolean
+  id          String       @id @default(uuid())
+  name        String
+  grammy      Boolean
+  albums      Album[]
+  tracks      Track[]
 }
 
 model Album {
-  id       String  @id @default(uuid())
-  name     String
-  year     Int
-  artistId String?
+  id         String      @id @default(uuid())
+  name       String
+  year       Int
+  artist     Artist?     @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  artistId   String?     @unique
+  tracks     Track[]
 }
+
+model Track {
+  id         String      @id @default(uuid())
+  name       String
+  artist     Artist?     @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  artistId   String?     @unique
+  album      Album?      @relation(fields: [albumId], references: [id], onDelete: SetNull)
+  albumId    String?     @unique
+  duration   Int
+}
+
 
