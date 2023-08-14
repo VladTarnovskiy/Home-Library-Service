@@ -6,54 +6,57 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common/exceptions';
-import { v4 as uuidv4 } from 'uuid';
-import { DataBaseService } from 'src/DB/db.service';
+// import { v4 as uuidv4 } from 'uuid';
+// import { DataBaseService } from 'src/DB/db.service';
+import { PrismaService } from 'src/service/prisma.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private db: DataBaseService) {}
-  create(createUserDto: CreateUserDto): UserEntity {
-    const user = {
-      ...createUserDto,
-      version: 1,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      id: uuidv4(),
-    };
+  constructor(private prismaService: PrismaService) {}
 
-    this.db.users.push(user);
+  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    const user = await this.prismaService.user.create({
+      data: createUserDto,
+    });
     return user;
   }
 
-  findAll(): UserEntity[] {
-    return this.db.users;
+  async findAll(): Promise<UserEntity[]> {
+    const users = await this.prismaService.user.findMany();
+    return users;
   }
 
-  findOne(id: string): UserEntity {
-    const user = this.db.users.filter((user: UserEntity) => user.id === id)[0];
+  async findOne(id: string): Promise<UserEntity | null> {
+    const user = await this.prismaService.user.findUnique({
+      where: id,
+    });
     if (user) {
       return user;
     }
     throw new NotFoundException();
   }
 
-  update(id: string, updatePasswordDto: UpdateUserDto) {
-    const user = this.findOne(id);
+  async update(id: string, updatePasswordDto: UpdateUserDto) {
+    const user = await this.findOne(id);
     if (user.password === updatePasswordDto.oldPassword) {
-      user.password = updatePasswordDto.newPassword;
-      user.version += 1;
-      user.updatedAt = Date.now();
-      return user;
+      const updatedUser = await this.prismaService.user.update({
+        where: { id },
+        data: {
+          version: user.version + 1,
+          password: updatePasswordDto.newPassword,
+          updatedAt: Date.now(),
+        },
+      });
+      return updatedUser;
     }
     throw new ForbiddenException();
   }
 
-  remove(id: string) {
-    const user = this.findOne(id);
+  async remove(id: string) {
+    const user = await this.findOne(id);
     if (user) {
-      this.db.users = this.db.users.filter(
-        (user: UserEntity) => user.id !== id,
-      );
+      await this.prismaService.user.delete({ where: { id } });
+      return true;
     }
   }
 }
