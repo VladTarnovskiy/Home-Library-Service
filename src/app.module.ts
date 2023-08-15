@@ -6,12 +6,12 @@ import { TracksModule } from './tracks/tracks.module';
 import { AlbumsModule } from './albums/albums.module';
 import { ArtistsModule } from './artists/artists.module';
 import { FavoritesModule } from './favorites/favorites.module';
-// import { DatabaseModule } from './DB/db.module';
+import { DatabaseModule } from './DB/db.module';
 import { PrismaModule } from './service/prisma.module';
 
 @Module({
   imports: [
-    // DatabaseModule,
+    DatabaseModule,
     PrismaModule,
     UsersModule,
     TracksModule,

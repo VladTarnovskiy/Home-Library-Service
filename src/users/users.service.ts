@@ -9,6 +9,7 @@ import {
 // import { v4 as uuidv4 } from 'uuid';
 // import { DataBaseService } from 'src/DB/db.service';
 import { PrismaService } from 'src/service/prisma.service';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
@@ -18,20 +19,26 @@ export class UsersService {
     const user = await this.prismaService.user.create({
       data: createUserDto,
     });
-    return user;
+    console.log(user);
+
+    return plainToClass(UserEntity, user);
+    // return user;
   }
 
   async findAll(): Promise<UserEntity[]> {
     const users = await this.prismaService.user.findMany();
-    return users;
+    return users.map((user) => plainToClass(UserEntity, user));
+    // return users;
   }
 
   async findOne(id: string): Promise<UserEntity | null> {
     const user = await this.prismaService.user.findUnique({
-      where: id,
+      where: { id },
     });
     if (user) {
-      return user;
+      return plainToClass(UserEntity, user);
+
+      // return user;
     }
     throw new NotFoundException();
   }
@@ -44,10 +51,11 @@ export class UsersService {
         data: {
           version: user.version + 1,
           password: updatePasswordDto.newPassword,
-          updatedAt: Date.now(),
+          // updatedAt: Date.now(),
         },
       });
-      return updatedUser;
+      // return updatedUser;
+      return plainToClass(UserEntity, updatedUser);
     }
     throw new ForbiddenException();
   }

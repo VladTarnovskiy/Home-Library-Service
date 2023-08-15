@@ -21,19 +21,19 @@ export class UsersController {
   @Post()
   @HttpCode(201)
   async create(@Body() createUserDto: CreateUserDto) {
-    return new UserEntity(this.usersService.create(createUserDto));
+    return new UserEntity(await this.usersService.create(createUserDto));
   }
 
   @Get()
   async findAll(): Promise<UserEntity[]> {
-    const users = this.usersService.findAll();
+    const users = await this.usersService.findAll();
     return users.map((user) => new UserEntity(user));
   }
 
   @Get(':id')
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
     console.log(id);
-    return new UserEntity(this.usersService.findOne(id));
+    return new UserEntity(await this.usersService.findOne(id));
   }
 
   @Put(':id')
@@ -41,7 +41,7 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return new UserEntity(this.usersService.update(id, updateUserDto));
+    return new UserEntity(await this.usersService.update(id, updateUserDto));
   }
 
   @Delete(':id')
