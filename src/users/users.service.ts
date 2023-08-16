@@ -51,10 +51,8 @@ export class UsersService {
         data: {
           version: user.version + 1,
           password: updatePasswordDto.newPassword,
-          // updatedAt: Date.now(),
         },
       });
-      // return updatedUser;
       return plainToClass(UserEntity, updatedUser);
     }
     throw new ForbiddenException();

@@ -4,7 +4,7 @@ export class UserEntity {
   id: string;
   login: string;
 
-  @Exclude()
+  // @Exclude()
   password: string;
 
   version: number;
