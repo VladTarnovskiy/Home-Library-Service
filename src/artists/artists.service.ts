@@ -30,7 +30,7 @@ export class ArtistsService {
       where: { id },
     });
     if (artist) {
-      plainToClass(ArtistEntity, artist);
+      return plainToClass(ArtistEntity, artist);
     }
     throw new NotFoundException();
   }
