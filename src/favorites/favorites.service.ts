@@ -23,10 +23,10 @@ export class FavoritesService {
   }
 
   async addAlbum(id: string) {
+    console.log(id);
     try {
-      await this.prismaService.albumOnFav.create({
-        data: { albumId: id },
-      });
+      await this.prismaService.albumOnFav.create({ data: { albumId: id } });
+
       return true;
     } catch {
       throw new UnprocessableEntityException();
@@ -38,7 +38,7 @@ export class FavoritesService {
       await this.prismaService.trackOnFav.create({ data: { trackId: id } });
 
       return true;
-    } catch (err) {
+    } catch {
       throw new UnprocessableEntityException();
     }
   }

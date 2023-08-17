@@ -17,41 +17,41 @@ export class FavoritesController {
   @Post('artist/:id')
   @HttpCode(201)
   async addArtist(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favsService.addArtist(id);
+    return await this.favsService.addArtist(id);
   }
 
   @Post('album/:id')
   @HttpCode(201)
   async addAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favsService.addAlbum(id);
+    return await this.favsService.addAlbum(id);
   }
 
   @Post('track/:id')
   @HttpCode(201)
   async addTrack(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favsService.addTrack(id);
+    return await this.favsService.addTrack(id);
   }
 
   @Get()
   async findAll(): Promise<FavoritesResponse> {
-    return this.favsService.findAll();
+    return await this.favsService.findAll();
   }
 
   @Delete('artist/:id')
   @HttpCode(204)
   async removeArtist(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favsService.removeArtist(id);
+    return await this.favsService.removeArtist(id);
   }
 
   @Delete('album/:id')
   @HttpCode(204)
   async removeAlbum(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favsService.removeAlbum(id);
+    return await this.favsService.removeAlbum(id);
   }
 
   @Delete('track/:id')
   @HttpCode(204)
   async removeTrack(@Param('id', ParseUUIDPipe) id: string) {
-    return this.favsService.removeTrack(id);
+    return await this.favsService.removeTrack(id);
   }
 }
