@@ -19,8 +19,9 @@ export class TracksService {
       data: {
         name,
         duration,
-        artist: artistId !== null ? { connect: { id: artistId } } : undefined,
-        album: albumId !== null ? { connect: { id: albumId } } : undefined,
+        artist:
+          artistId !== undefined ? { connect: { id: artistId } } : undefined,
+        album: albumId !== undefined ? { connect: { id: albumId } } : undefined,
       },
     });
 
@@ -51,8 +52,8 @@ export class TracksService {
       data: {
         name,
         duration,
-        artist: artistId !== null ? { connect: { id: artistId } } : undefined,
-        album: albumId !== null ? { connect: { id: albumId } } : undefined,
+        // artist: artistId !== null ? { connect: { id: artistId } } : undefined,
+        // album: albumId !== null ? { connect: { id: albumId } } : undefined,
       },
     });
 
@@ -61,7 +62,6 @@ export class TracksService {
 
   async remove(id: string) {
     const track = await this.findOne(id);
-    return true;
     if (track) {
       await this.prismaService.track.delete({ where: { id } });
 
