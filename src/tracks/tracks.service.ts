@@ -9,20 +9,9 @@ import { plainToClass } from 'class-transformer';
 @Injectable()
 export class TracksService {
   constructor(private prismaService: PrismaService) {}
-  async create({
-    name,
-    duration,
-    artistId,
-    albumId,
-  }: CreateTrackDto): Promise<TrackEntity> {
+  async create(createTrackDto: CreateTrackDto): Promise<TrackEntity> {
     const track = await this.prismaService.track.create({
-      data: {
-        name,
-        duration,
-        artist:
-          artistId !== undefined ? { connect: { id: artistId } } : undefined,
-        album: albumId !== undefined ? { connect: { id: albumId } } : undefined,
-      },
+      data: createTrackDto,
     });
 
     return plainToClass(TrackEntity, track);
@@ -43,18 +32,10 @@ export class TracksService {
     throw new NotFoundException();
   }
 
-  async update(
-    id: string,
-    { name, albumId, artistId, duration }: UpdateTrackDto,
-  ) {
+  async update(id: string, updateTrackDto: UpdateTrackDto) {
     const updatedTrack = await this.prismaService.track.update({
       where: { id },
-      data: {
-        name,
-        duration,
-        // artist: artistId !== null ? { connect: { id: artistId } } : undefined,
-        // album: albumId !== null ? { connect: { id: albumId } } : undefined,
-      },
+      data: updateTrackDto,
     });
 
     return plainToClass(TrackEntity, updatedTrack);
@@ -68,13 +49,5 @@ export class TracksService {
       return true;
     }
     return false;
-
-    // const trackInFav = this.db.favorites.tracks.includes(id);
-    // if (trackInFav) {
-    //   this.db.favorites.tracks = this.db.favorites.tracks.filter(
-    //     (trackId) => trackId !== id,
-    //   );
-    // }
-    // }
   }
 }
