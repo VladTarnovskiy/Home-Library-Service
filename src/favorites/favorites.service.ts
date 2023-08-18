@@ -3,9 +3,6 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-// import { AlbumEntity } from 'src/albums/entities/album.entity';
-// import { ArtistEntity } from 'src/artists/entities/artist.entity';
-// import { TrackEntity } from 'src/tracks/entities/track.entity';
 import { FavoritesResponse } from './entities/favorite.entity';
 import { PrismaService } from 'src/service/prisma.service';
 

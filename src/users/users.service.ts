@@ -6,8 +6,6 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common/exceptions';
-// import { v4 as uuidv4 } from 'uuid';
-// import { DataBaseService } from 'src/DB/db.service';
 import { PrismaService } from 'src/service/prisma.service';
 import { plainToClass } from 'class-transformer';
 
@@ -19,16 +17,12 @@ export class UsersService {
     const user = await this.prismaService.user.create({
       data: createUserDto,
     });
-    console.log(user);
-
     return plainToClass(UserEntity, user);
-    // return user;
   }
 
   async findAll(): Promise<UserEntity[]> {
     const users = await this.prismaService.user.findMany();
     return users.map((user) => plainToClass(UserEntity, user));
-    // return users;
   }
 
   async findOne(id: string): Promise<UserEntity | null> {
@@ -37,8 +31,6 @@ export class UsersService {
     });
     if (user) {
       return plainToClass(UserEntity, user);
-
-      // return user;
     }
     throw new NotFoundException();
   }

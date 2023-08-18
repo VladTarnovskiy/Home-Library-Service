@@ -3,7 +3,6 @@ import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { AlbumEntity } from './entities/album.entity';
 import { NotFoundException } from '@nestjs/common/exceptions';
-import { TrackEntity } from 'src/tracks/entities/track.entity';
 import { PrismaService } from 'src/service/prisma.service';
 import { plainToClass } from 'class-transformer';
 
@@ -46,19 +45,6 @@ export class AlbumsService {
       await this.prismaService.album.delete({ where: { id } });
 
       return true;
-      // const track = this.db.tracks.filter(
-      //   (track: TrackEntity) => track.albumId === id,
-      // )[0];
-      // if (track) {
-      //   track.albumId = null;
-      // }
-
-      // const albumInFav = this.db.favorites.albums.includes(id);
-      // if (albumInFav) {
-      //   this.db.favorites.albums = this.db.favorites.albums.filter(
-      //     (albumId) => albumId !== id,
-      //   );
-      // }
     }
     return false;
   }
