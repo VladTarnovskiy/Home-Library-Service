@@ -1,5 +1,5 @@
 FROM node:18.17-alpine
-WORKDIR /usr/src/app
+WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 RUN npm install && npm cache clean --force
