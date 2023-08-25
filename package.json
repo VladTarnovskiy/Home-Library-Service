@@ -20,10 +20,11 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "docker:scan": "docker scout cves vladtarnovskiy/api && docker scout cves vladtarnovskiy/postgres-db",
+    "docker:scan": "docker scout cves vladtarnovskiy/library-api && docker scout cves vladtarnovskiy/library-db",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
-    "prisma:migrate:dev": "prisma migrate dev"
+    "prisma:migrate:dev": "prisma migrate dev",
+    "database:init": "npx prisma migrate dev --name init"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
