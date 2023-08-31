@@ -47,7 +47,6 @@ export class UsersController {
   @Delete(':id')
   @HttpCode(204)
   async remove(@Param('id', ParseUUIDPipe) id: string) {
-    console.log('herfe');
     return this.usersService.remove(id);
   }
 }

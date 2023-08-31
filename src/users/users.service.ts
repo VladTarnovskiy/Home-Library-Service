@@ -8,14 +8,21 @@ import {
 } from '@nestjs/common/exceptions';
 import { PrismaService } from 'src/service/prisma.service';
 import { plainToClass } from 'class-transformer';
+import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private config: ConfigService,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    const salt = Number(this.config.get('CRYPT_SALT'));
+    const hashPassword = await bcrypt.hash(createUserDto.password, salt);
     const user = await this.prismaService.user.create({
-      data: createUserDto,
+      data: { login: createUserDto.login, password: hashPassword },
     });
     return plainToClass(UserEntity, user);
   }
@@ -37,12 +44,19 @@ export class UsersService {
 
   async update(id: string, updatePasswordDto: UpdateUserDto) {
     const user = await this.findOne(id);
-    if (user.password === updatePasswordDto.oldPassword) {
+    const salt = Number(this.config.get('CRYPT_SALT'));
+    const hashPassword = await bcrypt.hash(updatePasswordDto.newPassword, salt);
+    const isPasswordMatches = await bcrypt.compare(
+      updatePasswordDto.oldPassword,
+      user.password,
+    );
+
+    if (isPasswordMatches) {
       const updatedUser = await this.prismaService.user.update({
         where: { id },
         data: {
           version: user.version + 1,
-          password: updatePasswordDto.newPassword,
+          password: hashPassword,
         },
       });
       return plainToClass(UserEntity, updatedUser);
