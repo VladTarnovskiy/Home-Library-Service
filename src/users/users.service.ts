@@ -42,6 +42,12 @@ export class UsersService {
     throw new NotFoundException();
   }
 
+  async findOneByLogin(login: string) {
+    return await this.prismaService.user.findUnique({
+      where: { login: login },
+    });
+  }
+
   async update(id: string, updatePasswordDto: UpdateUserDto) {
     const user = await this.findOne(id);
     const salt = Number(this.config.get('CRYPT_SALT'));

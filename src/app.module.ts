@@ -8,6 +8,8 @@ import { ArtistsModule } from './artists/artists.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { DatabaseModule } from './DB/db.module';
 import { PrismaModule } from './service/prisma.module';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { PrismaModule } from './service/prisma.module';
     AlbumsModule,
     ArtistsModule,
     FavoritesModule,
+    AuthModule,
+    ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [AppController],
   providers: [AppService],
