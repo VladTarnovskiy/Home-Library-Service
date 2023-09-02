@@ -10,6 +10,9 @@ import { DatabaseModule } from './DB/db.module';
 import { PrismaModule } from './service/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/auth.guard';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -22,8 +25,15 @@ import { ConfigModule } from '@nestjs/config';
     FavoritesModule,
     AuthModule,
     ConfigModule.forRoot({ isGlobal: true }),
+    LoggerModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}
