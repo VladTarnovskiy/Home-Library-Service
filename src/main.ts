@@ -3,7 +3,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 import { LoggingService } from './logger/logger.service';
-import { HttpExceptionFilter } from './utils/exeptionFilter';
+import { HttpExceptionFilter } from './utils/exceptionFilter';
 dotenv.config();
 
 async function bootstrap() {
@@ -19,8 +19,6 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  await app.listen(process.env.PORT || 4000);
-
   process.on('unhandledRejection', (err) => {
     logger.error(`Unhandled Rejection: ${JSON.stringify(err)}`);
   });
@@ -29,5 +27,7 @@ async function bootstrap() {
     const message = err instanceof Error ? err.message : JSON.stringify(err);
     logger.error(`Uncaught Exception: ${message}`);
   });
+
+  await app.listen(process.env.PORT || 4000);
 }
 bootstrap();

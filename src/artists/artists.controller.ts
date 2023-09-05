@@ -21,7 +21,6 @@ export class ArtistsController {
   @Post()
   @HttpCode(201)
   async create(@Body() createArtistDto: CreateArtistDto) {
-    console.log('here');
     return await this.artistService.create(createArtistDto);
   }
 
