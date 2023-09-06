@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: 'library-api'
+    image: vladtarnovskiy/library-api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    ports:
+      - ${PORT}:${PORT}
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${PG_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public
+    depends_on:
+      - database
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - appnet
+  database:
+    container_name: 'library-postgres-db'
+    image: vladtarnovskiy/library-db
+    build: ./database/
+    restart: always
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    command: postgres -c logging_collector=on -c log_destination=stderr -c log_directory=/logs
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - database:/var/lib/postgresql/datanew
+      - ./logs:/logs
+    networks:
+      - appnet
+
+volumes:
+  database:
+
+networks:
+  appnet:
+    external: false
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
